@@ -14,6 +14,13 @@ padding: 20px 10px;
 border-radius: 6px;
 width: 380px;
 background: white;
+&:hover{
+  box-shadow: rgba(50, 50, 93, 0.7) 0px 50px 100px -20px, rgba(0, 0, 0, 0.7) 0px 30px 60px -30px, rgba(10, 37, 64, 0.8) 0px -2px 6px 0px inset;
+  transition: 0.6s;
+}
+@media (max-width:600px){
+  width:300px;
+}
 `;
 
 const AppLabel = styled.span`
