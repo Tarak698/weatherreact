@@ -1,4 +1,35 @@
 import styled from "styled-components"
+import React from "react";
+
+export const WeatherInfoIcons = {
+    sunset: "/icons/temp.svg", //||/weatherreact
+    sunrise: "/icons/temp.svg",
+    humidity: "/icons/humidity.svg",
+    wind: "/icons/wind.svg",
+    pressure: "/icons/pressure.svg",
+};
+
+export const WeatherIcons = {
+    "01d": "/icons/sunny.svg",
+    "01n": "/icons/night.svg",
+    "02d": "/icons/day.svg",
+    "02n": "/icons/cloudy-night.svg",
+    "03d": "/icons/cloudy.svg",
+    "03n": "/icons/cloudy.svg",
+    "04d": "/icons/perfect-day.svg",
+    "04n": "/icons/cloudy-night.svg",
+    "09d": "/icons/rain.svg",
+    "09n": "/icons/rain-night.svg",
+    "10d": "/icons/rain.svg",
+    "10n": "/icons/rain-night.svg",
+    "11d": "/icons/storm.svg",
+    "11n": "/icons/storm.svg",
+    "13d": "/icons/snow1.svg",
+    "13n": "/icons/snow1.svg",
+    "50d": "/icons/mist2.svg",
+    "50n": "/icons/mist2.svg",
+
+  };
 
 const WeatherCondition = styled.div`
  display: flex;
@@ -69,36 +100,45 @@ margin: 15px;
 }
 `;
 
-const WeatherInfoComponent=(props)=>{
-    const{name, value} = props;
-    return(
+const WeatherInfoComponent = (props) => {
+    const {name, value} = props;
+    return (
         <InfoContainer>
-            <InfoIcon src="/icons/temp.svg"/>
+            <InfoIcon src={WeatherInfoIcons[name]}/>
             <InfoLabel>
                 {value}
                 <span>{name}</span>
             </InfoLabel>
         </InfoContainer>
     );
-}
-
-const WeatherComponent =()=>{
-    return(
+};
+const WeatherComponent = (props) => {
+    const {weather} = props;
+    const isDay = weather?.weather[0].icon?.includes('d')
+    const getTime = (timeStamp) => {
+        return `${new Date(timeStamp * 1000).getHours()} : ${new Date(timeStamp * 1000).getMinutes()}`
+    }
+    return (
         <>
-        <WeatherCondition>
-            <Condition><span>30 C</span> | Cloudy
-            </Condition>
-            <WeatherLogo src="/icons/perfect-day.svg"/>
-        </WeatherCondition>
-        <Location>London, GB</Location>
-        <WeatherInfoLabel>Weather Info</WeatherInfoLabel>
-        <WeatherInfoContainer>
-            <WeatherInfoComponent name="sunrise" value="234"/>
-            <WeatherInfoComponent name="humdity" value="342"/>
-            <WeatherInfoComponent name="wind" value="534"/>
-            <WeatherInfoComponent name="pressure" value="254"/>
-        </WeatherInfoContainer>
+            <WeatherCondition>
+                <Condition>
+                    <span>{`${Math.floor(weather?.main?.temp - 273)}°C`}</span>
+                    {`  |  ${weather?.weather[0].description}`}
+                </Condition>
+                <WeatherLogo src={WeatherIcons[weather?.weather[0].icon]}/>
+            </WeatherCondition>
+            <Location>{`${weather?.name}, ${weather?.sys?.country}`}</Location>
+
+            <WeatherInfoLabel>Weather Info</WeatherInfoLabel>
+            <WeatherInfoContainer>
+                <WeatherInfoComponent name={isDay ? "sunset" : "sunrise"}
+                                      value={`${getTime(weather?.sys[isDay ? "sunset" : "sunrise"])}`}/>
+                <WeatherInfoComponent name={"humidity"} value={weather?.main?.humidity}/>
+                <WeatherInfoComponent name={"wind"} value={weather?.wind?.speed}/>
+                <WeatherInfoComponent name={"pressure"} value={weather?.main?.pressure}/>
+            </WeatherInfoContainer>
         </>
     );
 };
+
 export default WeatherComponent;
